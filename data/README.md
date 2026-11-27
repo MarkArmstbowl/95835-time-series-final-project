@@ -4,7 +4,7 @@
 
 The raw files come from the [LVCVA Executive Summary of Southern Nevada Tourism Indicators](https://www.lvcva.com/research/reports/post/lvcva-executive-summary-of-southern-nevada-tourism-indicators/), also linked from the [LVCVA Research Center](https://www.lvcva.com/research/).
 
-`raw/lvcva/` preserves the eight original workbooks, `LVCVA_2019.xlsx` through `LVCVA_2026.xlsx`, and the original `LVCVA_2019-2026.zip` archive. The archive contains the same eight workbooks. Their contents have not been changed.
+`raw/lvcva/` holds the eight original workbooks, `LVCVA_2019.xlsx` through `LVCVA_2026.xlsx`.
 
 The analysis snapshot contains **93 monthly observations, January 2019 through September 2026**. The 2026 workbook has date headers for October through December, but those months have no observations in this snapshot. YTD summaries, revision flags, and the separate year-over-year-change block are not additional monthly observations.
 
@@ -25,7 +25,11 @@ The accompanying August 2026 official PDF is stored under `docs/source_reports/`
 
 ## Processing
 
-The preserved notebook at `notebooks/reference/Team5_PeakPlan.ipynb` documents the extraction, label reconciliation, validation, and exploratory analysis. It creates `cleaned_market_indicators` and the two-column overall-market target table `hotel_monthly` in memory.
+[01_data_preparation.ipynb](../notebooks/01_data_preparation.ipynb) documents the extraction, label reconciliation, validation, and exploratory analysis. It creates `cleaned_market_indicators` and the two-column overall-market target table `hotel_monthly` in memory.
+
+[02_model_development.ipynb](../notebooks/02_model_development.ipynb) rebuilds the six target series from the same local workbooks and saves them to [monthly_targets.csv](processed/monthly_targets.csv). The CSV has 279 rows, with one row per region and month and columns for occupancy and ADR. Use it directly for the model evaluation.
+
+The key is `region, month`. The region IDs are `overall`, `strip`, and `downtown`. Parse `month` as a date and sort within region before passing its occupancy and ADR history to a model. The [Part 3 handoff](../docs/modeling_handoff.md) shows the exact input shape and a working forecast at a historical cutoff.
 
 Subsequent analysis should write standardized tables to `data/processed/`, retaining dates and units and identifying the selected market segment. The original observations, including the COVID period, remain in `raw/`. Any training-window selection or transformation belongs in the model pipeline and must use only information available at the forecast origin.
 
