@@ -10,9 +10,11 @@ The archived data cover **January 2019 through September 2026**. A 12-month fore
 
 ```text
 notebooks/
-  reference/        Original teammate notebook, including its saved outputs
+  01_data_preparation.ipynb                 Data source, cleaning, and exploration
+  02_model_development.ipynb               Candidate models and forecast previews
+  03_backtesting_and_model_selection.ipynb Planned evaluation and final export
 data/
-  raw/lvcva/        Original annual Excel files and their ZIP archive
+  raw/lvcva/        Eight original annual Excel files
   processed/        Clean monthly tables produced by the analysis
 src/                Shared data, forecasting, and evaluation code
 app/                Future application code
@@ -21,6 +23,7 @@ outputs/
   evaluation/       Backtest predictions, metrics, and model comparisons
   figures/          Figures selected for the report, interface, or slides
 docs/
+  modeling_handoff.md  Evaluation instructions and output schemas
   source_reports/   Official reports accompanying the source data
 wireframe/          Prototype links, interface designs, and user flows
 slides/             Presentation materials
@@ -31,12 +34,13 @@ See [data/README.md](data/README.md) for source details and units, and [wirefram
 
 ## Python environment
 
-Use a separate **Python 3.11** environment in this repository. The analysis package versions match the existing course environment used to check the data notebook. Direct dependencies are pinned in `requirements.txt`.
+Use **Python 3.11 or newer** in a virtual environment. The notebooks were tested on Python 3.11, and dependency resolution was also checked with Python 3.13 on macOS. Check which interpreter your terminal uses before creating the environment. The direct dependencies are pinned in [requirements.txt](requirements.txt).
 
 Run from the repository root on macOS or Linux:
 
 ```bash
-python3.11 -m venv .venv
+python3 --version
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
@@ -45,19 +49,27 @@ python -m pip install -r requirements.txt
 On Windows PowerShell, create and activate the environment with:
 
 ```powershell
-py -3.11 -m venv .venv
+py -3 --version
+py -3 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-In VS Code, select this repository's `.venv` interpreter and use it as the notebook kernel. JupyterLab is not required for the VS Code workflow.
+If the version command reports Python 3.10 or earlier, use a compatible interpreter to create the environment, for example `python3.13` or `py -3.13`. In VS Code, select the repo's `.venv` as the notebook kernel.
 
-The original notebook is preserved at [notebooks/reference/Team5_PeakPlan.ipynb](notebooks/reference/Team5_PeakPlan.ipynb). Its original loading cell still downloads and extracts a Drive ZIP using `gdown`; the notebook has not been rewritten. The same source workbooks are already available in `data/raw/lvcva/` for subsequent local analysis. Reference-notebook download files are ignored by Git.
+## Analysis notebooks
+
+1. [01_data_preparation.ipynb](notebooks/01_data_preparation.ipynb) documents the full LVCVA data preparation and exploration, with saved results. Rerunning its original setup downloads the source workbooks from Drive through `gdown`.
+2. [02_model_development.ipynb](notebooks/02_model_development.ipynb) reads the eight workbooks in `data/raw/lvcva/` and can run independently. Open it in VS Code, select the repo's Python kernel, and run all cells to regenerate the two CSVs.
+
+3. The planned `03_backtesting_and_model_selection.ipynb` reads [monthly_targets.csv](data/processed/monthly_targets.csv) directly and calls the shared models at historical cutoffs. Follow the [Part 3 handoff](docs/modeling_handoff.md) for the notebook layout, evaluation protocol, and expected files.
+
+The [candidate forecast CSV](outputs/forecasts/candidate_forecasts.csv) is available for interface previews. After model selection, the app reads `outputs/forecasts/final_forecasts.csv` for the outlook and `outputs/evaluation/app_accuracy.csv` for historical accuracy.
 
 ## Working conventions
 
-- Add new modeling and backtesting notebooks directly under `notebooks/`. Keep the original reference notebook intact.
+- Keep the data preparation, modeling, and backtesting notebooks in numbered order under `notebooks/`.
 - Put reusable Python functions in `src/` so modeling, evaluation, and the interface can share the same logic.
 - Preserve `data/raw/` unchanged. Write standardized tables to `data/processed/`.
 - Use project-relative paths. Resolve paths from the repository root or a notebook's location rather than hard-coding a machine-specific directory.
