@@ -1,0 +1,43 @@
+# Local environments and private working material
+.venv/
+venv/
+.local/
+.env
+.env.*
+!.env.example
+
+# Python and notebook caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.cache/
+*.log
+
+# Downloads made by the unchanged reference notebook
+/LVCVA_2019-2026.zip
+notebooks/**/LVCVA_2019-2026.zip
+lvcva_source/
+
+# Web dependencies and build output
+node_modules/
+dist/
+build/
+.next/
+.vite/
+.parcel-cache/
+.turbo/
+.vercel/
+
+# Operating-system and editor scratch files
+.DS_Store
+._*
+Thumbs.db
+*.swp
+*.swo
+*~
