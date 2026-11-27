@@ -19,7 +19,7 @@ htmlcov/
 .cache/
 *.log
 
-# Downloads made by the unchanged reference notebook
+# Downloads made by the data preparation notebook
 /LVCVA_2019-2026.zip
 notebooks/**/LVCVA_2019-2026.zip
 lvcva_source/
